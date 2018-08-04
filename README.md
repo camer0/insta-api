@@ -26,8 +26,8 @@ let instagram = new Instagram("Enter your session id. Grab from your cookies in 
         console.log(data.posts.length + ' posts')
         console.log(data.posts[0].shortcode)
 
-
-        instagram.getPostMedia(data.posts[0].shortcode).then((urls) => {
+        //getPostMedia can either be used as a function of a post or by instagram.getPostMedia(shortcode). Returns an array of urls for the pictures/videos in the post.
+        data.posts[0].getPostMedia().then((urls) => {
             let videoNum = 0, imgNum = 0
             for (let url of urls) {
                 if (url.endsWith('.mp4')) videoNum++
@@ -54,8 +54,9 @@ let instagram = new Instagram("Enter your session id. Grab from your cookies in 
 
 
     //Example of getComments function. Basically works the same as the getPosts function.
+    //getComments can either be used as a function of a post or by instagram.getComments(shortcode, options)
     await instagram.getPosts('spacex', {num: 2}).then((data) => {
-        instagram.getComments(data.posts[1].shortcode, {num: 1}).then((data) => {
+        data.posts[1].getComments({num: 27}).then((data) => {
             console.log(data.comments[0].text)
         })
     })
