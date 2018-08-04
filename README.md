@@ -52,6 +52,14 @@ let instagram = new Instagram("Enter your session id. Grab from your cookies in 
         console.log(id)
     })
 
+
+    //Example of getComments function. Basically works the same as the getPosts function.
+    await instagram.getPosts('spacex', {num: 2}).then((data) => {
+        instagram.getComments(data.posts[1].shortcode, {num: 1}).then((data) => {
+            console.log(data.comments[0].text)
+        })
+    })
+    
 })()
 ```
 
