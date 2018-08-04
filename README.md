@@ -7,7 +7,7 @@ An Instragram API that doesn't rely on Instagram's deprecating API.
 
 # Usage
 ```javascript
-let Instagram = require('./instagram-api');
+let Instagram = require('insta-api');
 let instagram = new Instagram("Enter your session id. Grab from your cookies in a browser");
 
 (async function() {
