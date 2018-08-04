@@ -15,7 +15,7 @@ let instagram = new Instagram("Enter your session id. Grab from your cookies in 
 
 ### getUserInfo(username)
 ```javascript
-await instagram.getUserInfo('joshuadun').then((userInfo) => {
+instagram.getUserInfo('joshuadun').then((userInfo) => {
     console.log('Biography: ' + userInfo.biography)
 })
 ```
@@ -23,7 +23,7 @@ Returns: `Biography: I'm not sentimental. This skin and bones is a rental.`
 
 ### getPosts(username or userid)
 ```javascript
-await instagram.getPosts('tylerrjoseph', {num: 10}).then(async (data) => {
+instagram.getPosts('tylerrjoseph', {num: 10}).then(async (data) => {
     let myData = {}
     myData.receivedPosts = data.posts.length
     let firstPost = data.posts[0]
@@ -52,7 +52,7 @@ Returns:
 
 ### getPostFromShortcode(shortcode)
 ```javascript
-await instagram.getPostByShortcode('BlSBbgSgZRh').then((post) => {
+instagram.getPostByShortcode('BlSBbgSgZRh').then((post) => {
     console.log(`${post.url} has ${post.likes} likes and ${post.comments} comments`)
 })
 ```
@@ -60,7 +60,7 @@ Returns `https://instagram.com/p/BlSBbgSgZRh has 400083 likes and 16279 comments
 
 ### getStories(username or userid)
 ```javascript
-await instagram.getStories('djkhaled').then((data) => {
+instagram.getStories('djkhaled').then((data) => {
     console.log(data.stories.length + ' stories')
     console.log(data.stories[0].url)
 })
@@ -72,7 +72,7 @@ Returns:
 
 ### getID(username)
 ```javascript
-await instagram.getID('instagram').then((id) => {
+instagram.getID('instagram').then((id) => {
     console.log(id)
 })
 ```
