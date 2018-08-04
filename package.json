@@ -1,0 +1,32 @@
+{
+  "name": "insta-api",
+  "version": "1.0.2",
+  "description": "An Instragram API that doesn't rely on Instagram's deprecating API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "pootusmaximus",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camer0/insta-api.git"
+  },
+  "keywords": [
+    "instagram",
+    "api",
+    "insta",
+    "stories",
+    "user",
+    "info"
+  ],
+  "bugs": {
+    "url": "https://github.com/camer0/insta-api/issues"
+  },
+  "homepage": "https://github.com/camer0/insta-api#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "got": "^8.3.2",
+    "isomorphic-fetch": "^2.2.1"
+  }
+}
