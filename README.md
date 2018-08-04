@@ -14,7 +14,7 @@ let instagram = new Instagram("Enter your session id. Grab from your cookies in 
     //Most functions also accept user ids instead of usernames. getUserInfo only accepts a username.
     await instagram.getUserInfo('joshuadun').then((userInfo) => {
         console.log('Biography: ' + userInfo.biography)
-    }).catch(e => console.log(e))
+    })
     //num option is how many posts to fetch. Default is 20 if not entered.
     await instagram.getPosts('tylerrjoseph', {num: 40}).then((data) => {
         console.log(data.posts.length + ' posts')
@@ -26,16 +26,16 @@ let instagram = new Instagram("Enter your session id. Grab from your cookies in 
                 else imgNum++
             }
             console.log(`Videos: ${videoNum}, Images: ${imgNum}, Total: ${urls.length}`)
-        }).catch(e => console.log(e))
-    }).catch(e => console.log(e))
+        })
+    })
     //Gets all stories.
     await instagram.getStories('djkhaled').then((data) => {
         console.log(data.stories.length + ' stories')
-    }).catch(e => console.log(e))
+    })
 
     await instagram.getID('instagram').then((id) => {
         console.log(id)
-    }).catch(e => console.log(e))
+    })
 })()
 ```
 
