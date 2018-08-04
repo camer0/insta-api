@@ -6,82 +6,74 @@ An Instragram API that doesn't rely on Instagram's deprecating API.
 ```npm install insta-api```
 
 # Usage
+
+### Importing the module
 ```javascript
 let Instagram = require('insta-api');
 let instagram = new Instagram("Enter your session id. Grab from your cookies in a browser");
-
-(async function() {
-
-
-
-    //Most functions also accept user ids instead of usernames. getUserInfo only accepts a username.
-    await instagram.getUserInfo('joshuadun').then((userInfo) => {
-        console.log('Biography: ' + userInfo.biography)
-    })
-
-
-
-    //num option is how many posts to fetch. Default is 20 if not entered.
-    await instagram.getPosts('tylerrjoseph', {num: 40}).then((data) => {
-        console.log(data.posts.length + ' posts')
-        console.log(data.posts[0].shortcode)
-
-        //getPostMedia can either be used as a function of a post or by instagram.getPostMedia(shortcode). Returns an array of urls for the pictures/videos in the post.
-        data.posts[0].getPostMedia().then((urls) => {
-            let videoNum = 0, imgNum = 0
-            for (let url of urls) {
-                if (url.endsWith('.mp4')) videoNum++
-                else imgNum++
-            }
-            console.log(urls[0])
-            console.log(`Videos: ${videoNum}, Images: ${imgNum}, Total: ${urls.length}`)
-        })
-    })
-
-
-
-    //Gets all stories.
-    await instagram.getStories('djkhaled').then((data) => {
-        console.log(data.stories.length + ' stories')
-        console.log(data.stories[0].url)
-    })
-
-
-    //Gets user id from a username
-    await instagram.getID('instagram').then((id) => {
-        console.log(id)
-    })
-
-
-    //Example of getComments function. Basically works the same as the getPosts function.
-    //getComments can either be used as a function of a post or by instagram.getComments(shortcode, options)
-    await instagram.getPosts('spacex', {num: 2}).then((data) => {
-        data.posts[1].getComments({num: 27}).then((data) => {
-            console.log(data.comments[0].text)
-        })
-    })
-
-})()
 ```
 
-**Expected output:**
-
+### getUserInfo(username)
+```javascript
+await instagram.getUserInfo('joshuadun').then((userInfo) => {
+    console.log('Biography: ' + userInfo.biography)
+})
 ```
-Biography: I'm not sentimental. This skin and bones is a rental.
+Returns: `Biography: I'm not sentimental. This skin and bones is a rental.`
 
-40 posts
+### getPosts(username or userid)
+```javascript
+await instagram.getPosts('tylerrjoseph', {num: 10}).then(async (data) => {
+    let myData = {}
+    myData.receivedPosts = data.posts.length
+    let firstPost = data.posts[0]
+    myData.firstPost = {shortcode: firstPost.shortcode}
 
-BU5BbaagEUV
 
-https://instagram.fbna1-2.fna.fbcdn.net/vp/1da0b84d63b19903b8a2f0584dd3573f/5C004BFB/t51.2885-15/e35/18812609_1875010279425214_5576153514956029952_n.jpg
-
-Videos: 0, Images: 3, Total: 3
-
-69 stories
-
-https://instagram.fbna1-2.fna.fbcdn.net/vp/25aee635b88160d54432883a3fca0cd1/5B68337B/t50.12441-16/38261396_261608264439420_6846402223638693584_n.mp4
-
-25025320
-
-@victoriafvasco Now how long will it  take to get space hotels up in orbit? 🤔
+    //Posts have two functions: getPostMedia and getComments
+    let urls = await firstPost.getPostMedia()
+    myData.firstPost.firstMedia = urls[0]
+    let commentData = await firstPost.getComments({num: 1})
+    myData.firstPost.firstComment = commentData.comments[0].text
+    console.log(myData)
+})
 ```
+Returns: 
+```js
+{
+    receivedPosts: 10,
+    firstPost: {
+        shortcode: 'BU5BbaagEUV',
+        firstMedia: 'https://instagram.fbna1-2.fna.fbcdn.net/vp/1da0b84d63b19903b8a2f0584dd3573f/5C004BFB/t51.2885-15/e35/18812609_1875010279425214_5576153514956029952_n.jpg',
+        firstComment: 'Post betch'
+    }
+}
+```
+
+### getPostFromShortcode(shortcode)
+```javascript
+await instagram.getPostByShortcode('BlSBbgSgZRh').then((post) => {
+    console.log(`${post.url} has ${post.likes} likes and ${post.comments} comments`)
+})
+```
+Returns `https://instagram.com/p/BlSBbgSgZRh has 400083 likes and 16279 comments`
+
+### getStories(username or userid)
+```javascript
+await instagram.getStories('djkhaled').then((data) => {
+    console.log(data.stories.length + ' stories')
+    console.log(data.stories[0].url)
+})
+```
+Returns: 
+```js
+{total: 54, first: 'https://instagram.fbna1-2.fna.fbcdn.net/vp/4d8ce1d14e6acd1cb75ce11a3f31bc4e/5B67C6AD/t50.12441-16/37886089_2108992515842077_1764245142725384721_n.mp4'}
+```
+
+### getID(username)
+```javascript
+await instagram.getID('instagram').then((id) => {
+    console.log(id)
+})
+```
+Returns: `25025320`
