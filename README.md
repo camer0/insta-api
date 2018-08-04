@@ -40,10 +40,12 @@ let instagram = new Instagram("Enter your session id. Grab from your cookies in 
 ```
 
 **Expected output:**
+
 ```
 Biography: I'm not sentimental. This skin and bones is a rental.
 40 posts
 BU5BbaagEUV
 Videos: 0, Images: 3, Total: 3
 68 stories
-25025320```
+25025320
+```
