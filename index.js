@@ -146,4 +146,59 @@ module.exports = class Instagram {
             }).catch((e) => reject(e))
         })
     }
+
+    /**
+     * Returns posts from a user
+     * @param {string} userid - Can be either the userid (slightly faster) or the username
+     * @param {Object} options - (Optional) Options for the request
+     * @param {string} options.num - Number of posts to get. Defaults to 20.
+     * @param {string} options.after - 'end_cursor' to begin at
+     */
+    async getComments(shortcode, options) {
+        let num = (options && options.num) ? options.num : 20
+        let headers = this.headers
+        return new Promise((resolve, reject) => {
+            if (!shortcode) reject(new Error('Invalid post shortcode'))
+            let commentids = []
+            let toReturn = {comments: []}
+            let first = (options && options.after) ? options.after : ""
+            let stop = false;
+            (async function() {
+                while (toReturn.comments.length < num && !stop) {
+                    await new Promise(next => {
+                        let afterFetch = `https://www.instagram.com/graphql/query/?query_hash=f0986789a5c5d17c2400faebf16efd0d&variables={"shortcode":"${shortcode}","first":${num-toReturn.comments.length}${(first !== '') ? (`,"after":"${first}"`) : ''}}`;
+                        fetch(afterFetch, {
+                            headers: headers
+                        }).then(async res => {
+                            let a = await res.json()
+                            if (a.status === 'fail' && toReturn.comments.length === 0) reject(new Error(a.message))
+                            if (a && a.data && a.data.shortcode_media && a.data.shortcode_media["edge_media_to_comment"]) {
+                                let comments = toReturn.comments
+                                toReturn = a.data; 
+                                toReturn.comments = comments
+                                for (let comment of a.data.shortcode_media["edge_media_to_comment"].edges) {
+                                    if (commentids.indexOf(comment.id) === -1) {
+                                        comment = comment.node
+                                        comment.likes = comment.edge_liked_by.count
+                                        commentids.push(comment.id)
+                                        toReturn.comments.push(comment)
+                                    }
+                                }
+                                
+                                first = a.data.shortcode_media["edge_media_to_comment"]['page_info']['end_cursor']
+                                next()
+                            } else {
+                                stop = true
+                                next()
+                            }
+                            
+                        }).catch(e => reject(e))
+                    })
+                }
+                toReturn.comments.sort(function(a,b) {return (a.created_at > b.created_at) ? 1 : ((b.created_at > a.created_at) ? -1 : 0);}); 
+                toReturn.comments.reverse()
+                resolve(toReturn)
+            })()
+        })
+    }
 }
